@@ -1,0 +1,140 @@
+﻿@page "/todo"
+@using BlazorApp1.Models
+
+
+
+<style>
+
+
+    h1 {
+        margin-bottom: 30px;
+    }
+
+    .todo-container {
+        max-width: 300px;
+        margin: 0 auto;
+        padding: 80px 0 0 0;
+        display: grid;
+        justify-items: center;
+    }
+
+    .todo-input {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 50px;
+    }
+
+        .todo-input input {
+            color: #666;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 5px;
+            outline: none;
+        }
+
+        .todo-input button {
+            outline: none;
+            color: #fff;
+            border: none;
+            background: #c72c41;
+        }
+
+    .todo-item {
+        width: 100%;
+        color: #666;
+        font-size: 16px;
+        font-weight: bold;
+        display: grid;
+        grid-template-columns: 1fr 50px;
+        align-items: center;
+        padding: 5px 0;
+    }
+
+    .todo-item__text {
+        cursor: pointer;
+    }
+
+    .todo-item__close {
+        color: red;
+        cursor: pointer;
+        text-align: center;
+        font-size: 22px;
+    }
+
+    .complete {
+        opacity: 0.5;
+        text-decoration: line-through;
+    }
+
+</style>
+
+<div class="todo-container">
+
+
+
+
+    <h3>Add a new task:</h3>
+
+    <div class="todo-input">
+        <input type="text" @bind="todoInput" />
+        <button @onclick="AddTodo">Add</button>
+
+    </div>
+
+
+    @for (int i = 0; i < todos.Count; i++)
+    {
+        var index = i;
+        var todo = todos[i];
+
+        <div class="todo-item">
+
+            <div 
+                class="@(todo.IsComplete ? "todo-item__text complete" : "todo-item__text")"
+                @onclick="@(() => MarkAsDone(todo))">
+                @todo.Title
+            </div>
+
+
+
+            <div class="todo-item__close"@onclick="@(() => RemoveTodo(index))">&times;</div>
+
+        </div>
+    }
+
+
+</div>
+
+
+
+@code {
+
+
+
+    public string todoInput { get; set; }
+    public List<Todoo> todos = new List<Todoo>();
+
+
+    public void AddTodo()
+    {
+        var todo = new Todoo();
+        todo.Title = todoInput;
+        todos.Add (todo);
+        System.Diagnostics.Debug.Print(todoInput);
+        todoInput = "";
+    }
+
+    public void RemoveTodo (int index)
+    {
+        todos.RemoveAt(index);
+    }
+
+    public void MarkAsDone (Todoo todo)
+    {
+
+        todo.IsComplete = !todo.IsComplete;
+
+    }
+
+
+}
